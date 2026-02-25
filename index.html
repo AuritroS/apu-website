@@ -1,0 +1,1463 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="theme-color" content="#F7F3ED" />
+    <title>Aurora & Matthew · 2026</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Cinzel:wght@400;500&family=Jost:wght@300;400&display=swap"
+      rel="stylesheet"
+    />
+
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+    <!-- Optional: preload the most likely hero resource (WebP) -->
+    <link
+      rel="preload"
+      as="image"
+      href="hero-1600.webp"
+      imagesizes="(min-width: 740px) 50vw, 100vw"
+    />
+  </head>
+
+  <style>
+            /* ── TOKENS ─────────────────────────────────────────── */
+            :root {
+              --ivory: #f7f3ed;
+              --cream: #ede8df;
+              --cream-dark: #e3ddd3;
+              --rust: #b5593a;
+              --rust-light: #c97a5a;
+              --charcoal: #2e3240;
+              --muted: #8a8070;
+              --shadow: rgba(28, 36, 52, 0.1);
+
+              --serif: "Cormorant Garamond", Georgia, serif;
+              --caps: "Cinzel", serif;
+              --sans: "Jost", sans-serif;
+
+              --safe-top: env(safe-area-inset-top, 0px);
+              --safe-bottom: env(safe-area-inset-bottom, 0px);
+            }
+
+            /* ── RESET ──────────────────────────────────────────── */
+            *,
+            *::before,
+            *::after {
+              box-sizing: border-box;
+              margin: 0;
+              padding: 0;
+            }
+            html {
+              scroll-behavior: smooth;
+              -webkit-text-size-adjust: 100%;
+              overflow-x: hidden;
+              background: var(
+                --charcoal
+              ); /* prevents "white" overscroll behind footer on iOS */
+            }
+            body {
+              background: var(--ivory);
+              color: var(--charcoal);
+              font-family: var(--sans);
+              font-weight: 300;
+              overflow-x: hidden;
+              -webkit-font-smoothing: antialiased;
+            }
+            img {
+              display: block;
+              max-width: 100%;
+            }
+            a {
+              color: inherit;
+            }
+
+            /* ── NAV ────────────────────────────────────────────── */
+            nav {
+              position: fixed;
+              top: 0;
+              left: 0;
+              right: 0;
+              z-index: 200;
+              padding: calc(14px + var(--safe-top)) 20px 14px;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              transition:
+                background 0.4s,
+                box-shadow 0.4s;
+            }
+            nav.scrolled {
+              background: rgba(247, 243, 237, 0.93);
+              backdrop-filter: blur(16px);
+              -webkit-backdrop-filter: blur(16px);
+              box-shadow: 0 1px 0 var(--shadow);
+            }
+            .nav-logo {
+              font-family: var(--serif);
+              font-style: italic;
+              font-size: 1.15rem;
+              color: var(--charcoal);
+              text-decoration: none;
+            }
+            .nav-links {
+              display: flex;
+              gap: 22px;
+              list-style: none;
+            }
+            .nav-links a {
+              font-family: var(--caps);
+              font-size: 0.55rem;
+              letter-spacing: 0.2em;
+              text-transform: uppercase;
+              color: var(--charcoal);
+              text-decoration: none;
+              -webkit-tap-highlight-color: transparent;
+              transition: color 0.2s;
+            }
+            .nav-links a:hover,
+            .nav-links a:active {
+              color: var(--rust);
+            }
+
+            /* ── HERO — mobile-first stacked ───────────────────── */
+            .hero {
+              min-height: 100dvh; /* was 100svh */
+              display: flex;
+              flex-direction: column;
+              position: relative;
+              overflow: hidden;
+            }
+            .hero-strip {
+              position: absolute;
+              left: 0;
+              top: 0;
+              bottom: 0;
+              width: 3px;
+              background: linear-gradient(
+                to bottom,
+                transparent 8%,
+                var(--rust) 35%,
+                var(--rust) 65%,
+                transparent 92%
+              );
+              z-index: 10;
+            }
+
+            .hero-img {
+              width: 100%;
+              height: 58dvh; /* was 58svh */
+              min-height: 300px;
+              object-fit: cover;
+              object-position: center 20%;
+              filter: brightness(0.84) saturate(0.88);
+              transform: scale(1.04);
+              animation: zoomOut 14s ease-out forwards;
+              flex-shrink: 0;
+            }
+            @keyframes zoomOut {
+              to {
+                transform: scale(1);
+              }
+            }
+
+            .hero-text {
+              background: var(--ivory);
+              padding: 38px 28px 52px;
+              flex: 1;
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+            }
+            .hero-names {
+              font-family: var(--serif);
+              font-size: clamp(2.8rem, 13vw, 5.5rem);
+              font-weight: 300;
+              font-style: italic;
+              color: var(--charcoal);
+              line-height: 1.04;
+              margin-bottom: 18px;
+              opacity: 0;
+              animation: fadeUp 0.9s 0.4s ease forwards;
+            }
+            .hero-date {
+              font-family: var(--caps);
+              font-size: 0.6rem;
+              letter-spacing: 0.22em;
+              color: var(--rust);
+              margin-bottom: 34px;
+              opacity: 0;
+              animation: fadeUp 0.9s 0.6s ease forwards;
+            }
+            .hero-cta {
+              display: inline-flex;
+              align-items: center;
+              gap: 12px;
+              font-size: 0.7rem;
+              letter-spacing: 0.18em;
+              color: var(--muted);
+              text-transform: uppercase;
+              text-decoration: none;
+              opacity: 0;
+              animation: fadeUp 0.9s 0.85s ease forwards;
+              -webkit-tap-highlight-color: transparent;
+            }
+            .hero-cta::before {
+              content: "";
+              display: block;
+              width: 26px;
+              height: 1px;
+              background: var(--rust);
+            }
+
+            @keyframes fadeUp {
+              from {
+                opacity: 0;
+                transform: translateY(15px);
+              }
+              to {
+                opacity: 1;
+                transform: translateY(0);
+              }
+            }
+
+            /* ── SHARED SECTION STYLES ──────────────────────────── */
+            section {
+              padding: 68px 0;
+            }
+            .container {
+              max-width: 1100px;
+              margin: 0 auto;
+              padding: 0 22px;
+            }
+
+            .label {
+              font-family: var(--caps);
+              font-size: 0.56rem;
+              letter-spacing: 0.36em;
+              text-transform: uppercase;
+              color: var(--rust);
+              margin-bottom: 12px;
+              display: flex;
+              align-items: center;
+              gap: 14px;
+            }
+            .label::after {
+              content: "";
+              width: 44px;
+              height: 1px;
+              background: var(--rust);
+              opacity: 0.4;
+            }
+
+            .heading {
+              font-family: var(--serif);
+              font-size: clamp(1.9rem, 7vw, 3.3rem);
+              font-weight: 300;
+              font-style: italic;
+              color: var(--charcoal);
+              line-height: 1.12;
+              margin-bottom: 14px;
+            }
+            .sub {
+              font-size: 0.87rem;
+              color: var(--muted);
+              line-height: 1.85;
+            }
+
+            /* ── GALLERY (no crop, tight grid, first image tall) ───── */
+            #gallery {
+              background: var(--cream);
+              padding: 0;
+            }
+
+            /* Mobile: swipe strip, no outer padding, minimal gaps */
+            .gallery-track {
+              display: flex;
+              gap: 3px;
+              overflow-x: auto;
+              -webkit-overflow-scrolling: touch;
+              scroll-snap-type: x mandatory;
+              scrollbar-width: none;
+              padding: 40px 0;
+            }
+            .gallery-track::-webkit-scrollbar {
+              display: none;
+            }
+
+            .gallery-track picture {
+              flex: 0 0 86vw;
+              max-width: 420px;
+              scroll-snap-align: start;
+            }
+
+            .gallery-track img {
+              width: 100%;
+              height: auto; /* no forced tile height */
+              object-fit: contain; /* no crop */
+              display: block;
+            }
+
+            /* Desktop: tight masonry-ish grid (no crop), first spans 2 rows */
+            @media (min-width: 740px) {
+              .gallery-track {
+                display: grid;
+                grid-template-columns: 1.55fr 1fr 1fr;
+                grid-auto-rows: 1fr; /* key: equal row heights */
+                gap: 3px;
+                overflow: visible;
+                scroll-snap-type: none;
+                max-width: 1200px;
+                margin: 0 auto;
+                align-items: stretch; /* key: allow items to stretch */
+                padding: 0;
+              }
+
+              .gallery-track picture {
+                width: 100%;
+                max-width: none;
+                height: 100%; /* key */
+              }
+
+              .gallery-track picture:first-child {
+                grid-row: span 2;
+              }
+
+              .gallery-track img {
+                width: 100%;
+                height: 100%; /* key: fill the tile height */
+                object-fit: cover; /* fills without leaving blank; will crop */
+                display: block;
+              }
+            }
+
+            /* ── EVENTS ─────────────────────────────────────────── */
+            #events {
+              background: var(--ivory);
+            }
+            .events-header {
+              margin-bottom: 36px;
+            }
+            .events-list {
+              display: flex;
+              flex-direction: column;
+              gap: 2px;
+            }
+
+            .event-card {
+              background: var(--cream);
+              padding: 30px 24px;
+              position: relative;
+              overflow: hidden;
+              border-left: 3px solid transparent;
+              transition:
+                border-color 0.28s,
+                background 0.28s;
+              -webkit-tap-highlight-color: transparent;
+            }
+            .event-card:hover,
+            .event-card:active {
+              border-color: var(--rust);
+              background: var(--cream-dark);
+            }
+
+            .ev-tag {
+              font-family: var(--caps);
+              font-size: 0.52rem;
+              letter-spacing: 0.24em;
+              color: var(--rust);
+              text-transform: uppercase;
+              margin-bottom: 8px;
+            }
+            .ev-name {
+              font-family: var(--serif);
+              font-size: 1.65rem;
+              font-style: italic;
+              color: var(--charcoal);
+              margin-bottom: 18px;
+            }
+            .ev-rows {
+              display: flex;
+              flex-direction: column;
+              gap: 13px;
+            }
+            .ev-row {
+              display: flex;
+              gap: 12px;
+              align-items: flex-start;
+            }
+            .ev-info-label {
+              font-family: var(--caps);
+              font-size: 0.5rem;
+              letter-spacing: 0.18em;
+              color: var(--muted);
+              text-transform: uppercase;
+              margin-bottom: 2px;
+            }
+            .ev-info-val {
+              font-size: 0.85rem;
+              color: var(--charcoal);
+              line-height: 1.55;
+            }
+            .ev-info-val a {
+              color: var(--rust);
+              text-decoration: none;
+              border-bottom: 1px solid rgba(181, 89, 58, 0.28);
+            }
+            .ev-info-val em {
+              font-size: 0.78rem;
+              color: var(--muted);
+            }
+
+            /* ── RSVP ───────────────────────────────────────────── */
+            #rsvp {
+              background: var(--charcoal);
+              padding-bottom: calc(68px + var(--safe-bottom));
+            }
+            #rsvp .label {
+              color: var(--rust-light);
+            }
+            #rsvp .label::after {
+              background: var(--rust-light);
+            }
+            #rsvp .heading {
+              color: var(--ivory);
+            }
+            #rsvp .sub {
+              color: rgba(247, 243, 237, 0.48);
+            }
+
+            .rsvp-deadline {
+              margin-top: 26px;
+              margin-bottom: 40px;
+              padding: 20px 22px;
+              border: 1px solid rgba(247, 243, 237, 0.1);
+              border-left: 3px solid var(--rust);
+            }
+            .rsvp-deadline p {
+              font-size: 0.7rem;
+              color: rgba(247, 243, 237, 0.38);
+              letter-spacing: 0.08em;
+              margin-bottom: 4px;
+            }
+            .rsvp-deadline strong {
+              font-family: var(--serif);
+              font-size: 1.15rem;
+              font-style: italic;
+              color: var(--ivory);
+              font-weight: 300;
+            }
+
+            .rsvp-form {
+              display: flex;
+              flex-direction: column;
+              gap: 17px;
+            }
+
+            .form-row {
+              display: flex;
+              gap: 12px;
+            }
+            .form-row .field {
+              flex: 1;
+              min-width: 0;
+            }
+
+            .field {
+              display: flex;
+              flex-direction: column;
+              gap: 7px;
+            }
+            .field label {
+              font-family: var(--caps);
+              font-size: 0.51rem;
+              letter-spacing: 0.24em;
+              text-transform: uppercase;
+              color: rgba(247, 243, 237, 0.42);
+            }
+            .field input,
+            .field select,
+            .field textarea {
+              background: rgba(247, 243, 237, 0.06);
+              border: none;
+              border-bottom: 1px solid rgba(247, 243, 237, 0.26);
+              color: var(--ivory);
+              font-family: var(--sans);
+              font-weight: 300;
+              font-size: 16px;
+              padding: 13px 13px;
+              outline: none;
+              border-radius: 0;
+              width: 100%;
+              -webkit-appearance: none;
+              transition:
+                border-color 0.2s,
+                background 0.2s;
+            }
+            .field select option {
+              background: var(--charcoal);
+              color: var(--ivory);
+            }
+            .field input::placeholder,
+            .field textarea::placeholder {
+              color: rgba(247, 243, 237, 0.22);
+            }
+            .field input:focus,
+            .field select:focus,
+            .field textarea:focus {
+              background: rgba(247, 243, 237, 0.09);
+              border-bottom-color: var(--rust-light);
+            }
+            .field textarea {
+              resize: vertical;
+              min-height: 82px;
+            }
+
+            .btn-submit {
+              margin-top: 4px;
+              padding: 17px 36px;
+              background: var(--rust);
+              color: var(--ivory);
+              border: none;
+              border-radius: 2px;
+              font-family: var(--caps);
+              font-size: 0.6rem;
+              letter-spacing: 0.26em;
+              text-transform: uppercase;
+              cursor: pointer;
+              width: 100%;
+              -webkit-tap-highlight-color: transparent;
+              transition: background 0.22s;
+            }
+            .btn-submit:active {
+              background: var(--rust-light);
+            }
+            .btn-submit:disabled {
+              opacity: 0.42;
+              cursor: not-allowed;
+            }
+
+            /* ── CONFIRMATION ───────────────────────────────────── */
+            #confirmation {
+              display: none;
+              text-align: center;
+              padding: 56px 20px;
+            }
+            #confirmation h2 {
+              font-family: var(--serif);
+              font-size: clamp(1.7rem, 7vw, 2.6rem);
+              font-style: italic;
+              font-weight: 300;
+              color: var(--ivory);
+              margin-bottom: 12px;
+              line-height: 1.2;
+            }
+            #confirmation p {
+              color: rgba(247, 243, 237, 0.48);
+              font-size: 0.87rem;
+              line-height: 1.8;
+            }
+
+            .conf-downloads {
+              display: flex;
+              flex-direction: column;
+              gap: 18px;
+              margin-top: 34px;
+              align-items: center;
+            }
+
+            .conf-download {
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+
+              width: 320px; /* key: fixed, identical width */
+              min-height: 56px; /* consistent height */
+              padding: 16px 24px; /* inner breathing room */
+
+              border: 1px solid var(--rust);
+              background: transparent;
+
+              font-family: var(--caps);
+              font-size: 0.62rem;
+              letter-spacing: 0.22em;
+              text-transform: uppercase;
+
+              color: var(--rust-light);
+              text-decoration: none;
+
+              line-height: 1;
+              white-space: nowrap;
+              text-align: center;
+            }
+
+            .conf-download:hover,
+            .conf-download:active {
+              background: var(--rust);
+              color: var(--ivory);
+            }
+
+            /* Desktop: place side-by-side but keep same size */
+            @media (min-width: 740px) {
+              .conf-downloads {
+                flex-direction: row;
+              }
+            }
+
+            /* ── FOOTER ─────────────────────────────────────────── */
+            footer {
+              background: var(--ivory);
+              padding: 38px 22px calc(38px + var(--safe-bottom));
+              text-align: center;
+            }
+            footer .footer-names {
+              font-family: var(--serif);
+              font-style: italic;
+              font-size: 1.5rem;
+              color: var(--charcoal);
+              opacity: 0.6;
+            }
+            footer p {
+              font-size: 0.68rem;
+              color: var(--muted);
+              letter-spacing: 0.1em;
+            }
+
+            /* ── TOAST ──────────────────────────────────────────── */
+            .toast {
+              position: fixed;
+              bottom: calc(24px + var(--safe-bottom));
+              left: 50%;
+              transform: translateX(-50%) translateY(68px);
+              background: var(--charcoal);
+              color: var(--ivory);
+              padding: 12px 22px;
+              font-size: 0.8rem;
+              opacity: 0;
+              transition: all 0.32s ease;
+              z-index: 999;
+              pointer-events: none;
+              border-left: 3px solid var(--rust);
+              max-width: calc(100vw - 36px);
+              text-align: center;
+            }
+            .toast.show {
+              opacity: 1;
+              transform: translateX(-50%) translateY(0);
+            }
+
+            /* ── UTILITY ────────────────────────────────────────── */
+            [data-event].hidden {
+              display: none !important;
+            }
+
+            /* ── DESKTOP ENHANCEMENTS ───────────────────────────── */
+            @media (min-width: 740px) {
+              nav {
+                padding: calc(18px + var(--safe-top)) 48px 18px;
+              }
+              .nav-links {
+                gap: 32px;
+              }
+
+              .hero {
+                flex-direction: row;
+                min-height: 100dvh;
+              }
+              .hero-strip {
+                left: 50%;
+              }
+              .hero-img {
+                width: 50%;
+                height: 100dvh;
+                min-height: 100dvh;
+                max-height: none;
+                flex-shrink: 0;
+              }
+              .hero-text {
+                width: 50%;
+                padding: 60px 60px;
+              }
+
+              section {
+                padding: 96px 0;
+              }
+              .container {
+                padding: 0 48px;
+              }
+
+              .events-header {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 40px;
+                align-items: end;
+                margin-bottom: 48px;
+              }
+              .events-list {
+                flex-direction: row;
+              }
+              .event-card {
+                flex: 1;
+              }
+
+              .rsvp-grid {
+                display: grid;
+                grid-template-columns: 1fr 1.3fr;
+                gap: 80px;
+                align-items: start;
+              }
+              .btn-submit {
+                width: auto;
+              }
+              .conf-downloads {
+                flex-direction: row;
+                justify-content: center;
+              }
+            }
+
+
+            /* =========================
+           MOBILE-ONLY PARALLAX
+           Option 1: sticky underlay sections
+           + hero parallax on mobile
+           ========================= */
+
+            /* default: underlays off (desktop + larger) */
+            .underlay {
+              display: none;
+            }
+
+            /* avoid any accidental spacing from global section rule */
+            .underlay {
+              padding: 0;
+            }
+    .parallax {
+      /* The image used */
+      background-image: url("img_parallax.jpg");
+
+      /* Full height */
+      height: 100%;
+
+      /* Create the parallax scrolling effect */
+      background-attachment: fixed;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+            /* mobile only */
+           @media (max-width: 739px) {
+
+          .underlay {
+            display: block;
+            position: relative;
+            height: 100vh;            /* start here; 140svh is long and feels like a “block” */
+            padding: 0;
+            margin: 0;
+            overflow: hidden;         /* <-- was overflow: clip */
+          }
+
+          .underlay > picture {
+            position: sticky;
+            top: 0;
+            display: block;
+            width: 100%;
+            height: 100vh;            /* <-- use vh for reliability */
+            overflow: hidden;
+          }
+
+          .underlay img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            transform: translate3d(0, 0, 0) scale(1.03);
+            will-change: transform;
+          }
+
+        }
+              /* Optional: subtle overlay for consistency */
+              .underlay::after {
+                content: "";
+                position: absolute;
+                inset: 0;
+                pointer-events: none;
+                background: linear-gradient(
+                  to bottom,
+                  rgba(46, 50, 64, 0.1),
+                  rgba(46, 50, 64, 0.3)
+                );
+              }
+
+              /* --- Make the next content section feel like it "slides over" --- */
+              #gallery,
+              #events,
+              #rsvp {
+                position: relative;
+                z-index: 2;
+              }
+
+              /* mobile sheet edge (pick where you want it; here on first section after underlays) */
+              #gallery {
+                border-top-left-radius: 18px;
+                border-top-right-radius: 18px;
+                box-shadow: 0 -10px 26px rgba(28, 36, 52, 0.14);
+              }
+
+              /* --- Hero parallax (mobile only; JS will drive translateY) --- */
+              .hero {
+                overflow: hidden;
+              }
+              .hero-img {
+                will-change: transform;
+                transform: translateY(0px) scale(1.04);
+              }
+
+            }
+
+            /* desktop: keep everything normal, and ensure underlays are hidden */
+            @media (min-width: 740px) {
+              .underlay {
+                display: none !important;
+              }
+            }
+  </style>
+
+  <body>
+    <!-- ── NAV ── -->
+    <nav id="nav">
+      <a class="nav-logo" href="#">Aurora & Matthew</a>
+      <ul class="nav-links">
+        <li><a href="#gallery">Photos</a></li>
+        <li><a href="#events">Events</a></li>
+        <li><a href="#rsvp">RSVP</a></li>
+      </ul>
+    </nav>
+
+    <!-- ── HERO ── -->
+    <section class="hero" id="home">
+      <div class="hero-strip"></div>
+
+      <picture>
+        <source
+          type="image/webp"
+          srcset="
+            hero-800.webp   800w,
+            hero-1200.webp 1200w,
+            hero-1600.webp 1600w,
+            hero-2000.webp 2000w
+          "
+          sizes="(min-width: 740px) 50vw, 100vw"
+        />
+        <img
+          class="hero-img"
+          src="hero-1600.jpg"
+          srcset="
+            hero-800.jpg   800w,
+            hero-1200.jpg 1200w,
+            hero-1600.jpg 1600w,
+            hero-2000.jpg 2000w
+          "
+          sizes="(min-width: 740px) 50vw, 100vw"
+          width="1600"
+          height="2000"
+          alt="Aurora and Matthew"
+          loading="eager"
+          decoding="async"
+          fetchpriority="high"
+          data-hero-parallax
+        />
+      </picture>
+
+      <div class="hero-text">
+        <h1 class="hero-names">Aurora<br />&<br />Matthew</h1>
+        <p class="hero-date">— 2nd July 2026 · Toronto —</p>
+      </div>
+    </section>
+
+    <!-- ── Parallax 1 ── -->
+    <section class="underlay underlay--a parallax" aria-hidden="true">
+      <picture>
+        <source
+          type="image/webp"
+          srcset="g3-600.webp 600w, g3-900.webp 900w, g3-1200.webp 1200w"
+          sizes="(min-width: 740px) 33vw, 82vw"
+        />
+        <img
+          src="g3-900.jpg"
+          srcset="g3-600.jpg 600w, g3-900.jpg 900w, g3-1200.jpg 1200w"
+          sizes="(min-width: 740px) 33vw, 82vw"
+          width="900"
+          height="675"
+          alt="Aurora and Matthew"
+          loading="lazy"
+          decoding="async"
+          data-underlay-parallax
+        />
+      </picture>
+    </section>
+
+    <!-- ── GALLERY ── -->
+    <section id="gallery">
+      <div class="gallery-track">
+        <picture>
+          <source
+            type="image/webp"
+            srcset="g1-600.webp 600w, g1-900.webp 900w, g1-1200.webp 1200w"
+            sizes="(min-width: 740px) 33vw, 82vw"
+          />
+          <img
+            src="g1-900.jpg"
+            srcset="g1-600.jpg 600w, g1-900.jpg 900w, g1-1200.jpg 1200w"
+            sizes="(min-width: 740px) 33vw, 82vw"
+            width="900"
+            height="675"
+            alt="Aurora and Matthew"
+            loading="lazy"
+            decoding="async"
+          />
+        </picture>
+
+        <picture>
+          <source
+            type="image/webp"
+            srcset="g2-600.webp 600w, g2-900.webp 900w, g2-1200.webp 1200w"
+            sizes="(min-width: 740px) 33vw, 82vw"
+          />
+          <img
+            src="g2-900.jpg"
+            srcset="g2-600.jpg 600w, g2-900.jpg 900w, g2-1200.jpg 1200w"
+            sizes="(min-width: 740px) 33vw, 82vw"
+            width="900"
+            height="675"
+            alt="Aurora and Matthew"
+            loading="lazy"
+            decoding="async"
+          />
+        </picture>
+
+        <picture>
+          <source
+            type="image/webp"
+            srcset="g3-600.webp 600w, g3-900.webp 900w, g3-1200.webp 1200w"
+            sizes="(min-width: 740px) 33vw, 82vw"
+          />
+          <img
+            src="g3-900.jpg"
+            srcset="g3-600.jpg 600w, g3-900.jpg 900w, g3-1200.jpg 1200w"
+            sizes="(min-width: 740px) 33vw, 82vw"
+            width="900"
+            height="675"
+            alt="Aurora and Matthew"
+            loading="lazy"
+            decoding="async"
+          />
+        </picture>
+
+        <picture>
+          <source
+            type="image/webp"
+            srcset="g4-600.webp 600w, g4-900.webp 900w, g4-1200.webp 1200w"
+            sizes="(min-width: 740px) 33vw, 82vw"
+          />
+          <img
+            src="g4-900.jpg"
+            srcset="g4-600.jpg 600w, g4-900.jpg 900w, g4-1200.jpg 1200w"
+            sizes="(min-width: 740px) 33vw, 82vw"
+            width="900"
+            height="675"
+            alt="Aurora and Matthew"
+            loading="lazy"
+            decoding="async"
+          />
+        </picture>
+
+        <picture>
+          <source
+            type="image/webp"
+            srcset="g5-600.webp 600w, g5-900.webp 900w, g5-1200.webp 1200w"
+            sizes="(min-width: 740px) 33vw, 82vw"
+          />
+          <img
+            src="g5-900.jpg"
+            srcset="g5-600.jpg 600w, g5-900.jpg 900w, g5-1200.jpg 1200w"
+            sizes="(min-width: 740px) 33vw, 82vw"
+            width="900"
+            height="675"
+            alt="Aurora and Matthew"
+            loading="lazy"
+            decoding="async"
+          />
+        </picture>
+      </div>
+    </section>
+    <!-- ── Parallax 2 ── -->
+    <section class="underlay underlay--a" aria-hidden="true">
+      <picture class="underlay-media">
+        <source
+          type="image/webp"
+          srcset="g2-600.webp 600w, g2-900.webp 900w, g2-1200.webp 1200w"
+          sizes="(min-width: 740px) 33vw, 82vw"
+        />
+        <img
+          src="g2-900.jpg"
+          srcset="g2-600.jpg 600w, g2-900.jpg 900w, g2-1200.jpg 1200w"
+          sizes="(min-width: 740px) 33vw, 82vw"
+          width="900"
+          height="675"
+          alt="Aurora and Matthew"
+          loading="lazy"
+          decoding="async"
+          data-underlay-parallax
+        />
+      </picture>
+    </section>
+
+    <!-- ── EVENTS ── -->
+    <section id="events">
+      <div class="container">
+        <div class="events-header">
+          <div>
+            <h3 class="heading">Events</h3>
+            <p class="label"></p>
+          </div>
+        </div>
+
+        <div class="events-list">
+          <div class="event-card" data-event="ceremony">
+            <p class="ev-tag">Saturday 27th June 2026</p>
+            <h3 class="ev-name">Ceremony</h3>
+            <div class="ev-rows">
+              <div class="ev-row">
+                <div class="ev-info">
+                  <p class="ev-info-label">Time</p>
+                  <p class="ev-info-val">10:00 AM</p>
+                </div>
+              </div>
+              <div class="ev-row">
+                <div class="ev-info">
+                  <p class="ev-info-label">Venue</p>
+                  <p class="ev-info-val">
+                    City Hall<br />
+                    483 Bay St., Toronto, ON M5G 1P5<br />
+                    <a
+                      href="https://maps.google.com/?q=483+Bay+St+Toronto+ON+M5G+1P5"
+                      target="_blank"
+                      rel="noopener"
+                      >Get Directions →</a
+                    >
+                  </p>
+                </div>
+              </div>
+              <div class="ev-row">
+                <div class="ev-info">
+                  <p class="ev-info-label">Attire</p>
+                  <p class="ev-info-val">
+                    Formal<br /><em>Suit, Dress, Saree</em>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="event-card" data-event="mehendi">
+            <p class="ev-tag">Wednesday 1st July 2026</p>
+            <h3 class="ev-name">Holud & Mehdi</h3>
+            <div class="ev-rows">
+              <div class="ev-row">
+                <div class="ev-info">
+                  <p class="ev-info-label">Time</p>
+                  <p class="ev-info-val">4:00 PM – 10:00 PM</p>
+                </div>
+              </div>
+              <div class="ev-row">
+                <div class="ev-info">
+                  <p class="ev-info-label">Venue</p>
+                  <p class="ev-info-val">
+                    Party Room / Patio<br />
+                    1185 The Queensway, Toronto, ON M8Z 0C5<br />
+                    <a
+                      href="https://maps.google.com/?q=1185+The+Queensway+Toronto+ON+M8Z+0C5"
+                      target="_blank"
+                      rel="noopener"
+                      >Get Directions →</a
+                    >
+                  </p>
+                </div>
+              </div>
+              <div class="ev-row">
+                <div class="ev-info">
+                  <p class="ev-info-label">Attire</p>
+                  <p class="ev-info-val">
+                    Bright summer colours, traditional<br /><em
+                      >Red, Orange, Yellow, Green · Panjabi, Dashiki, Salwar
+                      Kameez, Lahenga</em
+                    >
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="event-card" data-event="reception">
+            <p class="ev-tag">Thursday 2nd July 2026</p>
+            <h3 class="ev-name">Reception</h3>
+            <div class="ev-rows">
+              <div class="ev-row">
+                <div class="ev-info">
+                  <p class="ev-info-label">Time</p>
+                  <p class="ev-info-val">6:00 PM – 1:00 AM</p>
+                </div>
+              </div>
+              <div class="ev-row">
+                <div class="ev-info">
+                  <p class="ev-info-label">Venue</p>
+                  <p class="ev-info-val">
+                    Scarborough Convention Centre<br />
+                    20 Torham Pl, Scarborough, ON M1X 0B3<br />
+                    <a
+                      href="https://maps.google.com/?q=20+Torham+Pl+Scarborough+ON+M1X+0B3"
+                      target="_blank"
+                      rel="noopener"
+                      >Get Directions →</a
+                    >
+                  </p>
+                </div>
+              </div>
+              <div class="ev-row">
+                <div class="ev-info">
+                  <p class="ev-info-label">Attire</p>
+                  <p class="ev-info-val">
+                    Formal Traditional<br /><em
+                      >Suit, Panjabi, Dashiki, Saree, Lahenga</em
+                    >
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── RSVP ── -->
+    <section id="rsvp">
+      <div class="container">
+        <div class="rsvp-grid">
+          <div class="rsvp-aside">
+            <p class="label"></p>
+            <h2 class="heading">RSVP</h2>
+            <div class="rsvp-deadline">
+              <p>Kindly respond by</p>
+              <strong>31st March 2026</strong>
+            </div>
+          </div>
+
+          <div class="rsvp-right">
+            <form class="rsvp-form" id="rsvpForm" novalidate>
+              <input
+                type="hidden"
+                name="guest_type"
+                id="guestTypeField"
+                value=""
+              />
+
+              <div class="form-row">
+                <div class="field">
+                  <label>First Name</label>
+                  <input
+                    type="text"
+                    name="first_name"
+                    placeholder="First name"
+                    autocomplete="given-name"
+                    required
+                  />
+                </div>
+                <div class="field">
+                  <label>Last Name</label>
+                  <input
+                    type="text"
+                    name="last_name"
+                    placeholder="Last name"
+                    autocomplete="family-name"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="field">
+                <label>Email Address</label>
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="your@email.com"
+                  autocomplete="email"
+                  inputmode="email"
+                  required
+                />
+              </div>
+
+              <div class="form-row">
+                <div class="field">
+                  <label>Attending</label>
+                  <select name="attending" required>
+                    <option value="" disabled selected>Please select</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>Number of Guests</label>
+                  <select name="guests">
+                    <option value="1">1 (just me)</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                  </select>
+                </div>
+              </div>
+
+              <button type="submit" class="btn-submit" id="submitBtn">
+                Send RSVP
+              </button>
+            </form>
+
+            <div id="confirmation">
+              <h2>Thank you — we can't wait to celebrate with you!</h2>
+              <p>A confirmation has been sent to your email.</p>
+              <div class="conf-downloads" id="confDownloads"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── FOOTER ── -->
+    <footer>
+      <p class="footer-names">Aurora & Matthew</p>
+      <p>2nd July 2026 · Toronto</p>
+    </footer>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+      /* ── CONFIG — fill in your real values ────────────────── */
+      const CONFIG = {
+        emailjs: {
+          publicKey: "-kotoSOnMdNY3vq0B",
+          serviceId: "service_5mfi7sr",
+        },
+        appsScriptUrl:
+          "https://script.google.com/macros/s/AKfycbyITTY8oNTkf65YvdAm_N0bGjNVx79ypzpeHe9wVM_e4H2YgptybQQgN97Rk8MdTjyG/exec",
+      };
+      const TEMPLATE_FOR_GUEST = {
+        full: "full_template",
+        reception: "reception_template",
+        holud: "holud_template",
+      };
+      const GUEST_CONFIG = {
+        full: {
+          events: ["mehendi", "ceremony", "reception"],
+          invites: [
+            { label: "Download Holud Invite", file: "holud_invite.png" },
+            { label: "Download Wedding Invite", file: "wedding_invite.png" },
+          ],
+        },
+        reception: {
+          events: ["reception"],
+          invites: [
+            { label: "Download Wedding Invite", file: "wedding_invite.png" },
+          ],
+        },
+        holud: {
+          events: ["mehendi", "reception"],
+          invites: [
+            { label: "Download Wedding Invite", file: "wedding_invite.png" },
+          ],
+        },
+      };
+
+      emailjs.init(CONFIG.emailjs.publicKey);
+
+      const params = new URLSearchParams(window.location.search);
+      const gRaw = (params.get("g") || "").toLowerCase();
+
+      const GUEST_TYPE =
+        gRaw === "full" || gRaw === "holud" ? gRaw : "reception";
+
+      const templateId =
+        TEMPLATE_FOR_GUEST[GUEST_TYPE] || TEMPLATE_FOR_GUEST.reception;
+      const gConfig = GUEST_CONFIG[GUEST_TYPE] || GUEST_CONFIG["reception"];
+
+      document.getElementById("guestTypeField").value = GUEST_TYPE;
+
+      document.querySelectorAll("[data-event]").forEach((card) => {
+        if (!gConfig.events.includes(card.dataset.event))
+          card.classList.add("hidden");
+      });
+
+      window.addEventListener(
+        "scroll",
+        () => {
+          document
+            .getElementById("nav")
+            .classList.toggle("scrolled", window.scrollY > 50);
+        },
+        { passive: true },
+      );
+
+      function showToast(msg, ms = 4200) {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.classList.add("show");
+        setTimeout(() => t.classList.remove("show"), ms);
+      }
+
+      document
+        .getElementById("rsvpForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const form = e.target;
+          const btn = document.getElementById("submitBtn");
+
+          for (const f of form.querySelectorAll("[required]")) {
+            if (!f.value.trim()) {
+              showToast("Please fill in all required fields.");
+              f.focus();
+              return;
+            }
+          }
+
+          btn.disabled = true;
+          btn.textContent = "Sending…";
+
+          const data = {
+            first_name: form.first_name.value.trim(),
+            last_name: form.last_name.value.trim(),
+            email: form.email.value.trim(),
+            attending: form.attending.value,
+            guests: form.guests.value,
+            dietary: form.dietary.value.trim(),
+            message: form.message.value.trim(),
+            guest_type: GUEST_TYPE,
+            couple: "Aurora & Matthew",
+            wedding_date: "2nd July 2026",
+          };
+
+          try {
+            await fetch(CONFIG.appsScriptUrl, {
+              method: "POST",
+              mode: "no-cors",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(data),
+            });
+
+            await emailjs.send(CONFIG.emailjs.serviceId, templateId, {
+              to_name: data.first_name,
+              to_email: data.email,
+              attending: data.attending === "yes" ? "Accepted" : "Declined",
+              guest_type: GUEST_TYPE,
+              guests: data.guests,
+              couple: data.couple,
+              wedding_date: data.wedding_date,
+            });
+
+            const dlBox = document.getElementById("confDownloads");
+            dlBox.innerHTML = ""; // avoid duplicates if user resubmits
+            gConfig.invites.forEach((inv) => {
+              const a = document.createElement("a");
+              a.href = inv.file;
+              a.download = inv.file;
+              a.className = "conf-download";
+              a.textContent = inv.label;
+              dlBox.appendChild(a);
+            });
+
+            form.style.display = "none";
+            document.getElementById("confirmation").style.display = "block";
+          } catch (err) {
+            console.error(err);
+            showToast(
+              "Something went wrong. Please try again or contact us directly.",
+            );
+            btn.disabled = false;
+            btn.textContent = "Send RSVP";
+          }
+        });
+    </script>
+    <script>
+      /* Mobile-only parallax:
+   - Hero image translates slightly as you scroll
+   - Optional: underlay images drift a tiny bit while their sticky panel is active
+*/
+      (() => {
+        const MQ = window.matchMedia("(max-width: 739px)");
+        let raf = 0;
+
+        const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+        const heroImg = document.querySelector("[data-hero-parallax]");
+        const underlayImgs = Array.from(
+          document.querySelectorAll("[data-underlay-parallax]"),
+        );
+
+        function tick() {
+          raf = 0;
+          if (!MQ.matches) return;
+
+          const y = window.scrollY || 0;
+
+          // HERO: subtle translate (0..~22px) while keeping your scale
+          if (heroImg) {
+            const t = clamp(y * 0.06, 0, 22); // adjust 0.04–0.09
+            heroImg.style.transform = `translateY(${t}px) scale(1.04)`;
+          }
+
+          // UNDERLAYS: very light drift based on how far you are through each underlay section
+          for (const img of underlayImgs) {
+            const section = img.closest(".underlay");
+            if (!section) continue;
+
+            const r = section.getBoundingClientRect();
+            const vh = window.innerHeight || 1;
+
+            // progress 0..1 while the underlay is on screen
+            const progress = clamp((vh - r.top) / (vh + r.height), 0, 1);
+
+            // drift -10..+10px
+            const drift = (progress - 0.5) * 20;
+            img.style.transform = `translateY(${drift.toFixed(2)}px) scale(1.03)`;
+          }
+        }
+
+        function onScroll() {
+          if (raf) return;
+          raf = requestAnimationFrame(tick);
+        }
+
+        function onChange() {
+          // reset transforms when leaving mobile
+          if (!MQ.matches) {
+            if (heroImg) heroImg.style.transform = "";
+            for (const img of underlayImgs) img.style.transform = "";
+          } else {
+            tick();
+          }
+        }
+
+        window.addEventListener("scroll", onScroll, { passive: true });
+        window.addEventListener("resize", onScroll, { passive: true });
+        MQ.addEventListener?.("change", onChange);
+
+        // initial
+        tick();
+      })();
+    </script>
+  </body>
+</html>
